@@ -1,0 +1,834 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2026-02-12",
+    "author": "Calgary Strength & Physio — Project VECTOR",
+    "description": "Top 5 Injury Protocol Matrix — BASE Seed Data"
+  },
+  "protocols": [
+    {
+      "id": "PATH_ACL_01",
+      "name": "ACL Reconstruction (Patellar Tendon Autograft)",
+      "osics_code": "KJXX",
+      "body_region": "Knee",
+      "injury_mechanism": "Traumatic",
+      "research_source": "Aspetar Clinical Guideline 2026 / Delaware Protocol",
+      "research_doi": "10.1136/bjsports-2022-106543",
+      "contraindications": [
+        "Active infection",
+        "Graft failure",
+        "Uncontrolled effusion"
+      ],
+      "phases": [
+        {
+          "id": "PHASE_ACL_01_P1",
+          "order_index": 1,
+          "name": "Phase 1: Protection & Activation",
+          "description": "Restore ROM, eliminate quad lag, control effusion. Foundation for all subsequent loading.",
+          "typical_duration": "Weeks 0-2",
+          "precautions": "No active hamstring curl (graft protection). Weight-bearing as tolerated with crutches.",
+          "exit_criteria": [
+            {
+              "id": "EC_ACL_P1_01",
+              "metric_name": "knee_extension",
+              "target_operator": "=",
+              "target_value": "0",
+              "measurement_unit": "degrees",
+              "measurement_tool": "Goniometer",
+              "description": "Full passive knee extension"
+            },
+            {
+              "id": "EC_ACL_P1_02",
+              "metric_name": "quad_lag",
+              "target_operator": "=",
+              "target_value": "0",
+              "measurement_unit": "degrees",
+              "measurement_tool": "Visual Assessment",
+              "description": "No quadriceps lag during SLR"
+            },
+            {
+              "id": "EC_ACL_P1_03",
+              "metric_name": "pain_level",
+              "target_operator": "<=",
+              "target_value": "2",
+              "measurement_unit": "VAS (0-10)",
+              "measurement_tool": "VAS Scale",
+              "description": "Pain at rest ≤ 2/10"
+            },
+            {
+              "id": "EC_ACL_P1_04",
+              "metric_name": "effusion",
+              "target_operator": "<=",
+              "target_value": "1",
+              "measurement_unit": "grade (0-3)",
+              "measurement_tool": "Stroke Test",
+              "description": "Minimal or no effusion"
+            }
+          ],
+          "programming": [
+            {
+              "id": "SLOT_ACL_P1_01",
+              "order_index": 1,
+              "slot_type": "Quad Activation",
+              "intent_description": "Restore voluntary quad contraction and eliminate lag.",
+              "standard_exercise": "Quad Set (towel under knee)",
+              "regression": "NMES-assisted Quad Set",
+              "progression": "Quad Set with ankle weight",
+              "high_density_option": "Quad Set with NMES (Neuromuscular E-Stim)",
+              "high_density_rationale": "NMES recruits Type II fibers that voluntary contraction cannot access post-operatively.",
+              "sets_reps_guidance": "10 reps x 10s hold, 3x/day",
+              "frequency": "3x/day",
+              "equipment_required": [
+                "towel",
+                "NMES unit (optional)"
+              ]
+            },
+            {
+              "id": "SLOT_ACL_P1_02",
+              "order_index": 2,
+              "slot_type": "ROM Restoration",
+              "intent_description": "Achieve full passive extension and 90° flexion by end of phase.",
+              "standard_exercise": "Prone Hang (passive extension)",
+              "regression": "Heel Prop on bolster",
+              "progression": "Low-load long-duration stretch",
+              "high_density_option": "Continuous Passive Motion (CPM) machine",
+              "high_density_rationale": "CPM provides consistent, pain-free ROM without voluntary effort.",
+              "sets_reps_guidance": "15-20 min, 2x/day",
+              "frequency": "2x/day",
+              "equipment_required": [
+                "bolster",
+                "CPM (optional)"
+              ]
+            },
+            {
+              "id": "SLOT_ACL_P1_03",
+              "order_index": 3,
+              "slot_type": "Hypertrophy (Load Sparing)",
+              "intent_description": "Maintain quad mass using BFR to achieve hypertrophy at low loads.",
+              "standard_exercise": "Straight Leg Raise (4-way)",
+              "regression": "SLR without weight",
+              "progression": "SLR with 2-5lb ankle weight",
+              "high_density_option": "BFR Straight Leg Raise (30/15/15/15)",
+              "high_density_rationale": "BFR achieves hypertrophy stimulus at 20-30% 1RM, safe for early post-op.",
+              "sets_reps_guidance": "30/15/15/15 reps @ 80% LOP",
+              "frequency": "3x/week",
+              "equipment_required": [
+                "BFR cuff",
+                "ankle weight (optional)"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "PHASE_ACL_01_P2",
+          "order_index": 2,
+          "name": "Phase 2: Strength Foundation",
+          "description": "Progressive loading of quads and posterior chain. Transition to full weight-bearing.",
+          "typical_duration": "Weeks 2-6",
+          "precautions": "Avoid deep squat >90° until week 4. Monitor patellofemoral symptoms.",
+          "exit_criteria": [
+            {
+              "id": "EC_ACL_P2_01",
+              "metric_name": "knee_flexion",
+              "target_operator": ">=",
+              "target_value": "120",
+              "measurement_unit": "degrees",
+              "measurement_tool": "Goniometer",
+              "description": "Knee flexion ≥ 120°"
+            },
+            {
+              "id": "EC_ACL_P2_02",
+              "metric_name": "quad_strength_lsi",
+              "target_operator": ">=",
+              "target_value": "60",
+              "measurement_unit": "% LSI",
+              "measurement_tool": "Dynamometer",
+              "description": "Quad strength ≥ 60% Limb Symmetry Index"
+            },
+            {
+              "id": "EC_ACL_P2_03",
+              "metric_name": "single_leg_balance",
+              "target_operator": ">=",
+              "target_value": "30",
+              "measurement_unit": "seconds",
+              "measurement_tool": "Stopwatch",
+              "description": "Single-leg balance ≥ 30 seconds"
+            }
+          ],
+          "programming": [
+            {
+              "id": "SLOT_ACL_P2_01",
+              "order_index": 1,
+              "slot_type": "Quad Hypertrophy",
+              "intent_description": "Build quad mass through progressive compound and isolation loading.",
+              "standard_exercise": "Goblet Squat (to box)",
+              "regression": "Wall Sit",
+              "progression": "Barbell Back Squat",
+              "high_density_option": "BFR Leg Extension (Early OKC)",
+              "high_density_rationale": "2026 evidence supports early OKC at low loads with BFR — no increased laxity.",
+              "sets_reps_guidance": "3x10-15 @ RPE 6-7",
+              "frequency": "3x/week",
+              "equipment_required": [
+                "kettlebell/dumbbell",
+                "box"
+              ]
+            },
+            {
+              "id": "SLOT_ACL_P2_02",
+              "order_index": 2,
+              "slot_type": "Posterior Chain",
+              "intent_description": "Strengthen hamstrings and glutes to support knee stability.",
+              "standard_exercise": "Romanian Deadlift (dumbbell)",
+              "regression": "Hip Bridge",
+              "progression": "Barbell RDL",
+              "high_density_option": "Nordic Hamstring Curl (eccentric)",
+              "high_density_rationale": "Nordic curls reduce hamstring re-injury risk by 51%.",
+              "sets_reps_guidance": "3x8-12",
+              "frequency": "2-3x/week",
+              "equipment_required": [
+                "dumbbells"
+              ]
+            },
+            {
+              "id": "SLOT_ACL_P2_03",
+              "order_index": 3,
+              "slot_type": "Proprioception",
+              "intent_description": "Restore neuromuscular control and balance.",
+              "standard_exercise": "Single-Leg Stand (eyes open → closed)",
+              "regression": "Tandem Stand",
+              "progression": "Single-Leg Stand on BOSU",
+              "high_density_option": "Perturbation Training (clinician-applied)",
+              "high_density_rationale": "Perturbation training improves dynamic knee stability outcomes.",
+              "sets_reps_guidance": "3x30-60s holds",
+              "frequency": "Daily",
+              "equipment_required": [
+                "BOSU (optional)"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "PHASE_ACL_01_P3",
+          "order_index": 3,
+          "name": "Phase 3: Power & Return to Sport",
+          "description": "Plyometric loading, sport-specific drills, and psychological readiness assessment.",
+          "typical_duration": "Weeks 12-24+",
+          "precautions": "Must pass hop test battery before sport-specific drills.",
+          "exit_criteria": [
+            {
+              "id": "EC_ACL_P3_01",
+              "metric_name": "quad_strength_lsi",
+              "target_operator": ">=",
+              "target_value": "90",
+              "measurement_unit": "% LSI",
+              "measurement_tool": "Isokinetic Dynamometer",
+              "description": "Quad strength ≥ 90% LSI"
+            },
+            {
+              "id": "EC_ACL_P3_02",
+              "metric_name": "hop_test_lsi",
+              "target_operator": ">=",
+              "target_value": "90",
+              "measurement_unit": "% LSI",
+              "measurement_tool": "Single Hop for Distance",
+              "description": "Hop test battery ≥ 90% LSI"
+            },
+            {
+              "id": "EC_ACL_P3_03",
+              "metric_name": "acl_rsi_score",
+              "target_operator": ">=",
+              "target_value": "56",
+              "measurement_unit": "points (0-100)",
+              "measurement_tool": "ACL-RSI Questionnaire",
+              "description": "ACL-RSI psychological readiness ≥ 56"
+            }
+          ],
+          "programming": [
+            {
+              "id": "SLOT_ACL_P3_01",
+              "order_index": 1,
+              "slot_type": "Plyometrics",
+              "intent_description": "Develop reactive strength and landing mechanics.",
+              "standard_exercise": "Box Drop to Stick Landing",
+              "regression": "Pogo Hops (bilateral)",
+              "progression": "Single-Leg Depth Jump",
+              "high_density_option": "VBT Squat Jump (velocity tracking)",
+              "high_density_rationale": "Velocity-based training ensures optimal power output per rep.",
+              "sets_reps_guidance": "4x5 @ max intent",
+              "frequency": "2x/week",
+              "equipment_required": [
+                "plyo box",
+                "VBT encoder (optional)"
+              ]
+            },
+            {
+              "id": "SLOT_ACL_P3_02",
+              "order_index": 2,
+              "slot_type": "Max Strength",
+              "intent_description": "Build peak force production for sport demands.",
+              "standard_exercise": "Barbell Back Squat",
+              "regression": "Leg Press",
+              "progression": "Front Squat",
+              "high_density_option": "Iso-Hold Squat at Sticking Point (5s holds)",
+              "high_density_rationale": "Isometric holds at weakest ROM angle accelerate strength plateau breakthrough.",
+              "sets_reps_guidance": "4x3-5 @ RPE 8-9",
+              "frequency": "2x/week",
+              "equipment_required": [
+                "barbell",
+                "squat rack"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PATH_RC_01",
+      "name": "Rotator Cuff Repair (Medium Tear, Arthroscopic)",
+      "osics_code": "SSXX",
+      "body_region": "Shoulder",
+      "injury_mechanism": "Degenerative / Traumatic",
+      "research_source": "BESS Guidelines 2026 / MOON Shoulder Group",
+      "research_doi": "10.1177/0363546522-RC-2026",
+      "contraindications": [
+        "Active re-tear signs",
+        "Deltoid detachment",
+        "Uncontrolled diabetes (healing risk)"
+      ],
+      "phases": [
+        {
+          "id": "PHASE_RC_01_P1",
+          "order_index": 1,
+          "name": "Phase 1: Maximal Protection",
+          "description": "Sling immobilization with passive ROM only. Protect repair integrity.",
+          "typical_duration": "Weeks 0-6",
+          "precautions": "No active shoulder movement. Sling at all times except exercises.",
+          "exit_criteria": [
+            {
+              "id": "EC_RC_P1_01",
+              "metric_name": "passive_flexion",
+              "target_operator": ">=",
+              "target_value": "140",
+              "measurement_unit": "degrees",
+              "measurement_tool": "Goniometer",
+              "description": "Passive forward flexion ≥ 140°"
+            },
+            {
+              "id": "EC_RC_P1_02",
+              "metric_name": "pain_level",
+              "target_operator": "<=",
+              "target_value": "2",
+              "measurement_unit": "VAS (0-10)",
+              "measurement_tool": "VAS Scale",
+              "description": "Pain at rest ≤ 2/10"
+            }
+          ],
+          "programming": [
+            {
+              "id": "SLOT_RC_P1_01",
+              "order_index": 1,
+              "slot_type": "Passive ROM",
+              "intent_description": "Maintain glenohumeral joint mobility without stressing the repair.",
+              "standard_exercise": "Pendulum Exercises (Codman)",
+              "regression": "Table Slide (supine)",
+              "progression": "Supine Passive Flexion (wand-assisted)",
+              "high_density_option": "CPM Machine (shoulder protocol)",
+              "high_density_rationale": "Continuous passive motion maintains tissue pliability without active muscle engagement.",
+              "sets_reps_guidance": "10 reps, 3x/day",
+              "frequency": "3x/day",
+              "equipment_required": [
+                "wand/dowel"
+              ]
+            },
+            {
+              "id": "SLOT_RC_P1_02",
+              "order_index": 2,
+              "slot_type": "Scapular Stability",
+              "intent_description": "Prevent scapular dyskinesis and maintain periscapular tone.",
+              "standard_exercise": "Scapular Retraction (isometric)",
+              "regression": "Cervical Retraction",
+              "progression": "Prone Scapular Squeeze",
+              "high_density_option": "NMES Periscapular Activation",
+              "high_density_rationale": "NMES prevents disuse atrophy of lower trapezius during immobilization.",
+              "sets_reps_guidance": "10 reps x 5s hold",
+              "frequency": "3x/day",
+              "equipment_required": [
+                "NMES unit (optional)"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "PHASE_RC_01_P2",
+          "order_index": 2,
+          "name": "Phase 2: Active-Assisted to Active ROM",
+          "description": "Progressive transition to active movement. Begin isotonic strengthening.",
+          "typical_duration": "Weeks 6-12",
+          "precautions": "Avoid heavy loading. Monitor for impingement signs.",
+          "exit_criteria": [
+            {
+              "id": "EC_RC_P2_01",
+              "metric_name": "active_flexion",
+              "target_operator": ">=",
+              "target_value": "160",
+              "measurement_unit": "degrees",
+              "measurement_tool": "Goniometer",
+              "description": "Active forward flexion ≥ 160°"
+            },
+            {
+              "id": "EC_RC_P2_02",
+              "metric_name": "external_rotation_strength",
+              "target_operator": ">=",
+              "target_value": "50",
+              "measurement_unit": "% contralateral",
+              "measurement_tool": "Dynamometer",
+              "description": "ER strength ≥ 50% contralateral side"
+            }
+          ],
+          "programming": [
+            {
+              "id": "SLOT_RC_P2_01",
+              "order_index": 1,
+              "slot_type": "Rotator Cuff Strengthening",
+              "intent_description": "Isolate rotator cuff muscles to restore dynamic stability.",
+              "standard_exercise": "Side-Lying External Rotation (light dumbbell)",
+              "regression": "Banded ER at 0° abduction",
+              "progression": "Standing ER at 90° abduction",
+              "high_density_option": "Heavy Slow Resistance ER (3s eccentric)",
+              "high_density_rationale": "HSR protocols show superior tendon adaptation vs. standard isotonic loading.",
+              "sets_reps_guidance": "3x10-12 @ 3s eccentric tempo",
+              "frequency": "3x/week",
+              "equipment_required": [
+                "light dumbbell",
+                "resistance band"
+              ]
+            },
+            {
+              "id": "SLOT_RC_P2_02",
+              "order_index": 2,
+              "slot_type": "Posterior Chain (Upper)",
+              "intent_description": "Restore force couple balance and posterior shoulder endurance.",
+              "standard_exercise": "Prone Y-T-W Raises",
+              "regression": "Wall Slides",
+              "progression": "Face Pulls (cable)",
+              "high_density_option": "Prone I-Y-T with BFR (upper arm cuff)",
+              "high_density_rationale": "BFR on upper arm achieves hypertrophy in deltoid/rotator cuff at sub-maximal loads.",
+              "sets_reps_guidance": "3x12-15",
+              "frequency": "3x/week",
+              "equipment_required": [
+                "bench",
+                "light dumbbells"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PATH_LUMBAR_01",
+      "name": "Lumbar Disc Herniation (Non-Surgical Management)",
+      "osics_code": "Lxx",
+      "body_region": "Lumbar Spine",
+      "injury_mechanism": "Degenerative / Mechanical",
+      "research_source": "McGill Method / O'Sullivan CFT Framework 2026",
+      "research_doi": "10.1016/j.spinee.2025-CFT-RCT",
+      "contraindications": [
+        "Cauda equina syndrome",
+        "Progressive neurological deficit",
+        "Fracture"
+      ],
+      "phases": [
+        {
+          "id": "PHASE_LUMBAR_01_P1",
+          "order_index": 1,
+          "name": "Phase 1: De-sensitization & Motor Control",
+          "description": "Identify and eliminate provocative postures. Restore pain-free movement baseline.",
+          "typical_duration": "Weeks 0-4",
+          "precautions": "Avoid end-range flexion under load. Spine-sparing movement strategies.",
+          "exit_criteria": [
+            {
+              "id": "EC_LUM_P1_01",
+              "metric_name": "pain_level_activity",
+              "target_operator": "<=",
+              "target_value": "3",
+              "measurement_unit": "VAS (0-10)",
+              "measurement_tool": "VAS Scale",
+              "description": "Pain during daily activities ≤ 3/10"
+            },
+            {
+              "id": "EC_LUM_P1_02",
+              "metric_name": "mcgill_big_3_tolerance",
+              "target_operator": "=",
+              "target_value": "pass",
+              "measurement_unit": "pass/fail",
+              "measurement_tool": "Clinical Assessment",
+              "description": "Tolerates McGill Big 3 without symptom provocation"
+            }
+          ],
+          "programming": [
+            {
+              "id": "SLOT_LUM_P1_01",
+              "order_index": 1,
+              "slot_type": "Core Stability (Anti-Extension)",
+              "intent_description": "Build anterior core stiffness to prevent hyperextension under load.",
+              "standard_exercise": "Modified Curl-Up (McGill)",
+              "regression": "Diaphragmatic Breathing (supine)",
+              "progression": "Dead Bug",
+              "high_density_option": "DNS-Based Core Activation (Dynamic Neuromuscular Stabilization)",
+              "high_density_rationale": "DNS activates deep stabilizers via developmental postures — superior to volitional bracing.",
+              "sets_reps_guidance": "3x8-10 with 5s hold",
+              "frequency": "Daily",
+              "equipment_required": []
+            },
+            {
+              "id": "SLOT_LUM_P1_02",
+              "order_index": 2,
+              "slot_type": "Core Stability (Anti-Rotation)",
+              "intent_description": "Train resist-rotation capacity without subjecting disc to torsion.",
+              "standard_exercise": "Side Plank (from knee)",
+              "regression": "Side-Lying Clam",
+              "progression": "Side Plank (full, from feet)",
+              "high_density_option": "Pallof Press (isometric hold)",
+              "high_density_rationale": "Anti-rotation loading trains oblique sling without spinal flexion moment.",
+              "sets_reps_guidance": "3x20-30s holds per side",
+              "frequency": "Daily",
+              "equipment_required": [
+                "cable/band (optional)"
+              ]
+            },
+            {
+              "id": "SLOT_LUM_P1_03",
+              "order_index": 3,
+              "slot_type": "Cognitive Functional Therapy",
+              "intent_description": "Reprogram movement patterns to reduce fear-avoidance behaviors.",
+              "standard_exercise": "Graded Exposure to Feared Movements",
+              "regression": "Pain Neuroscience Education (PNE) session",
+              "progression": "Functional Task Training (bending, lifting)",
+              "high_density_option": "CFT with Biofeedback (EMG-guided relaxation)",
+              "high_density_rationale": "Biofeedback helps patients identify and reduce protective guarding patterns.",
+              "sets_reps_guidance": "15-20 min session",
+              "frequency": "2x/week (clinician-guided)",
+              "equipment_required": [
+                "EMG biofeedback unit (optional)"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "PHASE_LUMBAR_01_P2",
+          "order_index": 2,
+          "name": "Phase 2: Load Tolerance & Flexion Exposure",
+          "description": "Gradual introduction of spinal loading and flexion tolerance. Build capacity for real-world demands.",
+          "typical_duration": "Weeks 4-12",
+          "precautions": "Progress flexion gradually. Monitor for peripheralization.",
+          "exit_criteria": [
+            {
+              "id": "EC_LUM_P2_01",
+              "metric_name": "deadlift_tolerance",
+              "target_operator": ">=",
+              "target_value": "bodyweight",
+              "measurement_unit": "load",
+              "measurement_tool": "Barbell",
+              "description": "Tolerates bodyweight deadlift without symptom provocation"
+            },
+            {
+              "id": "EC_LUM_P2_02",
+              "metric_name": "oswestry_score",
+              "target_operator": "<=",
+              "target_value": "20",
+              "measurement_unit": "% (0-100)",
+              "measurement_tool": "ODI Questionnaire",
+              "description": "Oswestry Disability Index ≤ 20% (minimal disability)"
+            }
+          ],
+          "programming": [
+            {
+              "id": "SLOT_LUM_P2_01",
+              "order_index": 1,
+              "slot_type": "Hip Hinge Patterning",
+              "intent_description": "Dissociate hip movement from lumbar spine movement under load.",
+              "standard_exercise": "Kettlebell Deadlift",
+              "regression": "Rack Pull (elevated)",
+              "progression": "Barbell Conventional Deadlift",
+              "high_density_option": "Trap Bar Deadlift with VBT Feedback",
+              "high_density_rationale": "VBT ensures consistent velocity — prevents compensatory overloading.",
+              "sets_reps_guidance": "3x5-8 @ RPE 6-7",
+              "frequency": "2x/week",
+              "equipment_required": [
+                "kettlebell",
+                "barbell (progression)"
+              ]
+            },
+            {
+              "id": "SLOT_LUM_P2_02",
+              "order_index": 2,
+              "slot_type": "Loaded Carry",
+              "intent_description": "Build dynamic spinal stability during ambulation.",
+              "standard_exercise": "Farmer's Walk",
+              "regression": "Suitcase Carry (unilateral)",
+              "progression": "Overhead Carry",
+              "high_density_option": "Sandbag Carry (variable load distribution)",
+              "high_density_rationale": "Unstable loads demand higher core activation than fixed implements.",
+              "sets_reps_guidance": "3x40m walks",
+              "frequency": "2-3x/week",
+              "equipment_required": [
+                "kettlebells/dumbbells",
+                "sandbag (optional)"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PATH_ACHILLES_01",
+      "name": "Achilles Tendinopathy (Mid-Portion, Insertional)",
+      "osics_code": "TAxx",
+      "body_region": "Ankle/Lower Leg",
+      "injury_mechanism": "Overuse",
+      "research_source": "Silbernagel Load Management / Rio Isometric Protocol 2026",
+      "research_doi": "10.1177/03635465-ACHILLES-2026",
+      "contraindications": [
+        "Complete rupture",
+        "Active fluoroquinolone use",
+        "Systemic inflammatory disease"
+      ],
+      "phases": [
+        {
+          "id": "PHASE_ACH_01_P1",
+          "order_index": 1,
+          "name": "Phase 1: Pain Reduction & Isometric Loading",
+          "description": "Reduce pain through isometric loading. Establish baseline load tolerance.",
+          "typical_duration": "Weeks 0-2",
+          "precautions": "Avoid stretching into dorsiflexion. No plyometrics.",
+          "exit_criteria": [
+            {
+              "id": "EC_ACH_P1_01",
+              "metric_name": "morning_stiffness",
+              "target_operator": "<=",
+              "target_value": "10",
+              "measurement_unit": "minutes",
+              "measurement_tool": "Patient Report",
+              "description": "Morning stiffness ≤ 10 minutes"
+            },
+            {
+              "id": "EC_ACH_P1_02",
+              "metric_name": "pain_during_load",
+              "target_operator": "<=",
+              "target_value": "3",
+              "measurement_unit": "VAS (0-10)",
+              "measurement_tool": "VAS Scale",
+              "description": "Pain during single-leg calf raise ≤ 3/10"
+            }
+          ],
+          "programming": [
+            {
+              "id": "SLOT_ACH_P1_01",
+              "order_index": 1,
+              "slot_type": "Isometric Loading",
+              "intent_description": "Induce analgesia and maintain tendon stiffness without shear.",
+              "standard_exercise": "Bilateral Calf Raise Isometric Hold (wall)",
+              "regression": "Seated Calf Raise Isometric",
+              "progression": "Single-Leg Calf Raise Isometric Hold",
+              "high_density_option": "Spanish Squat Isometric (45s holds)",
+              "high_density_rationale": "Isometric holds at long muscle lengths produce immediate analgesic effect and tendon adaptation.",
+              "sets_reps_guidance": "5x45s holds @ 70% MVC",
+              "frequency": "Daily",
+              "equipment_required": [
+                "wall/step",
+                "belt (Spanish squat)"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "PHASE_ACH_01_P2",
+          "order_index": 2,
+          "name": "Phase 2: Heavy Slow Resistance",
+          "description": "Progressive isotonic loading using HSR protocol. Build tendon capacity.",
+          "typical_duration": "Weeks 2-12",
+          "precautions": "Pain during exercise acceptable if ≤ 5/10 and settles within 24hrs.",
+          "exit_criteria": [
+            {
+              "id": "EC_ACH_P2_01",
+              "metric_name": "single_leg_calf_raise_reps",
+              "target_operator": ">=",
+              "target_value": "25",
+              "measurement_unit": "reps",
+              "measurement_tool": "Count",
+              "description": "Single-leg calf raise endurance ≥ 25 reps"
+            },
+            {
+              "id": "EC_ACH_P2_02",
+              "metric_name": "pain_24hr_response",
+              "target_operator": "<=",
+              "target_value": "2",
+              "measurement_unit": "VAS (0-10)",
+              "measurement_tool": "VAS Scale",
+              "description": "Pain response within 24hrs of loading ≤ 2/10"
+            }
+          ],
+          "programming": [
+            {
+              "id": "SLOT_ACH_P2_01",
+              "order_index": 1,
+              "slot_type": "Heavy Slow Resistance",
+              "intent_description": "Stimulate collagen synthesis and realignment via high-load strain.",
+              "standard_exercise": "Standing Calf Raise (3s up, 3s down)",
+              "regression": "Bilateral Calf Raise (slow tempo)",
+              "progression": "Weighted Single-Leg Calf Raise",
+              "high_density_option": "HSR Calf Raise (6s eccentric, weighted)",
+              "high_density_rationale": "HSR > eccentric-only protocols for tendinopathy. Superior collagen remodeling.",
+              "sets_reps_guidance": "4x6-8 @ 6s eccentric tempo",
+              "frequency": "3x/week",
+              "equipment_required": [
+                "step/platform",
+                "weight vest or barbell"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PATH_ANKLE_01",
+      "name": "Lateral Ankle Sprain (Grade II)",
+      "osics_code": "Axx",
+      "body_region": "Ankle",
+      "injury_mechanism": "Traumatic",
+      "research_source": "PAASS / ROAST Consensus 2026",
+      "research_doi": "10.1136/bjsports-2025-ankle-ROAST",
+      "contraindications": [
+        "Fracture (Ottawa Rules positive)",
+        "Syndesmosis injury (requires different protocol)",
+        "Complete ATFL rupture with mechanical instability"
+      ],
+      "phases": [
+        {
+          "id": "PHASE_ANKLE_01_P1",
+          "order_index": 1,
+          "name": "Phase 1: Acute Management & Early Loading",
+          "description": "PEACE & LOVE framework. Early weight-bearing and active ROM.",
+          "typical_duration": "Days 0-7",
+          "precautions": "Avoid RICE (ice and complete rest are outdated). Optimal loading encouraged.",
+          "exit_criteria": [
+            {
+              "id": "EC_ANK_P1_01",
+              "metric_name": "weight_bearing_tolerance",
+              "target_operator": "=",
+              "target_value": "full",
+              "measurement_unit": "pass/fail",
+              "measurement_tool": "Clinical Assessment",
+              "description": "Full weight-bearing without antalgic gait"
+            },
+            {
+              "id": "EC_ANK_P1_02",
+              "metric_name": "dorsiflexion_rom",
+              "target_operator": ">=",
+              "target_value": "10",
+              "measurement_unit": "degrees",
+              "measurement_tool": "Weight-Bearing Lunge Test",
+              "description": "Dorsiflexion ROM ≥ 10° (WBLT)"
+            }
+          ],
+          "programming": [
+            {
+              "id": "SLOT_ANK_P1_01",
+              "order_index": 1,
+              "slot_type": "Active ROM",
+              "intent_description": "Flush edema and prevent soft tissue adhesion.",
+              "standard_exercise": "Ankle Alphabet (air writing)",
+              "regression": "Ankle Pumps (sagittal plane only)",
+              "progression": "Seated Calf Raise (active)",
+              "high_density_option": "Aquatic Active ROM (pool-based)",
+              "high_density_rationale": "Buoyancy reduces compressive load while allowing full ROM exploration.",
+              "sets_reps_guidance": "Complete alphabet 2-3x",
+              "frequency": "Every 2-3 hours",
+              "equipment_required": []
+            },
+            {
+              "id": "SLOT_ANK_P1_02",
+              "order_index": 2,
+              "slot_type": "Gait Retraining",
+              "intent_description": "Restore normal heel-to-toe mechanics and limit antalgic patterns.",
+              "standard_exercise": "Heel-Toe Walking (supported)",
+              "regression": "Partial weight-bearing with crutches",
+              "progression": "Normal gait without support",
+              "high_density_option": "Anti-Gravity Treadmill (AlterG)",
+              "high_density_rationale": "AlterG allows normalized gait pattern at reduced body weight.",
+              "sets_reps_guidance": "5-10 min, focus on normal gait",
+              "frequency": "Multiple times daily",
+              "equipment_required": [
+                "crutches (if needed)"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "PHASE_ANKLE_01_P2",
+          "order_index": 2,
+          "name": "Phase 2: Dynamic Stability & Plyometric Introduction",
+          "description": "Progressive balance work and rapid introduction of plyometrics (by Week 2).",
+          "typical_duration": "Weeks 1-4",
+          "precautions": "Brace during sport-specific activities. Monitor for mechanical instability.",
+          "exit_criteria": [
+            {
+              "id": "EC_ANK_P2_01",
+              "metric_name": "star_excursion_balance",
+              "target_operator": ">=",
+              "target_value": "90",
+              "measurement_unit": "% limb symmetry",
+              "measurement_tool": "SEBT/Y-Balance",
+              "description": "Star Excursion Balance ≥ 90% symmetry"
+            },
+            {
+              "id": "EC_ANK_P2_02",
+              "metric_name": "hop_test_confidence",
+              "target_operator": ">=",
+              "target_value": "8",
+              "measurement_unit": "score (0-10)",
+              "measurement_tool": "Patient Report",
+              "description": "Self-reported hop confidence ≥ 8/10"
+            }
+          ],
+          "programming": [
+            {
+              "id": "SLOT_ANK_P2_01",
+              "order_index": 1,
+              "slot_type": "Dynamic Balance",
+              "intent_description": "Challenge ankle proprioceptors to restore reflex stabilization.",
+              "standard_exercise": "Single-Leg Stand on Foam",
+              "regression": "Tandem Stand (eyes closed)",
+              "progression": "Single-Leg Stand with Ball Catch",
+              "high_density_option": "Perturbation Platform Training",
+              "high_density_rationale": "Unexpected perturbations train reactive ankle stability — superior to static balance.",
+              "sets_reps_guidance": "3x30s per leg, progress to dynamic tasks",
+              "frequency": "Daily",
+              "equipment_required": [
+                "foam pad",
+                "perturbation platform (optional)"
+              ]
+            },
+            {
+              "id": "SLOT_ANK_P2_02",
+              "order_index": 2,
+              "slot_type": "Plyometric Landing",
+              "intent_description": "Reintroduce impact forces to condition passive subsystems.",
+              "standard_exercise": "Bilateral Drop Landing (low box)",
+              "regression": "Bilateral Pogo Hops (in place)",
+              "progression": "Single-Leg Lateral Hop to Stick",
+              "high_density_option": "Reactive Agility Drill (light-cued direction changes)",
+              "high_density_rationale": "Reactive (unplanned) agility transfers to sport better than pre-planned drills.",
+              "sets_reps_guidance": "3x5 landings, focus on quality",
+              "frequency": "3x/week (from Week 2)",
+              "equipment_required": [
+                "low plyo box",
+                "agility lights (optional)"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

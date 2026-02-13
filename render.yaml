@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: vector-dashboard
+    env: python
+    buildCommand: pip install -r backend/requirements.txt && python scripts/load_base.py
+    startCommand: gunicorn -w 4 -k uvicorn.workers.UvicornWorker backend.main:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
