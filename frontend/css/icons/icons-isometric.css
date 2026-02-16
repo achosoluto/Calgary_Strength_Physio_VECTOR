@@ -1,0 +1,137 @@
+/* =============================================================================
+   VECTOR Icon Style D: "Isometric Metaphor" — CSS Fill Overrides
+   Provides the 2-tone depth effect for isometric 3D icons.
+   Uses CSS custom properties so colors adapt to the dashboard theme.
+   ============================================================================= */
+
+/* --- Isometric Color Palette --- */
+:root {
+    /* Cyan family for primary/active */
+    --iso-top-primary: rgba(0, 212, 255, 0.15);
+    --iso-side-primary: rgba(0, 212, 255, 0.08);
+    --iso-base-primary: rgba(0, 212, 255, 0.04);
+
+    /* Green family for completed/met */
+    --iso-top-success: rgba(16, 185, 129, 0.15);
+    --iso-side-success: rgba(16, 185, 129, 0.08);
+    --iso-base-success: rgba(16, 185, 129, 0.04);
+
+    /* Neutral for locked */
+    --iso-top-locked: rgba(75, 85, 99, 0.1);
+    --iso-side-locked: rgba(75, 85, 99, 0.06);
+    --iso-base-locked: rgba(75, 85, 99, 0.03);
+
+    /* Amber for HD badge */
+    --iso-top-warning: rgba(245, 158, 11, 0.15);
+    --iso-side-warning: rgba(245, 158, 11, 0.08);
+    --iso-base-warning: rgba(245, 158, 11, 0.04);
+}
+
+/* --- Default Isometric Fills (Muted) --- */
+.iso .iso-top {
+    fill: var(--iso-top-primary);
+}
+
+.iso .iso-side {
+    fill: var(--iso-side-primary);
+}
+
+.iso .iso-base {
+    fill: var(--iso-base-primary);
+}
+
+.iso .iso-mid {
+    fill: rgba(0, 212, 255, 0.1);
+}
+
+.iso .iso-center {
+    fill: rgba(0, 212, 255, 0.2);
+}
+
+.iso .iso-dot {
+    fill: currentColor;
+    stroke: none;
+}
+
+.iso .iso-arrow {
+    stroke: currentColor;
+}
+
+/* --- Pike: Uses primary cyan fills --- */
+.pike-icon .iso .iso-top {
+    fill: var(--iso-top-primary);
+}
+
+.pike-icon .iso .iso-side {
+    fill: var(--iso-side-primary);
+}
+
+.pike-icon .iso .iso-base {
+    fill: var(--iso-base-primary);
+}
+
+/* --- Active Phase: Brighter cyan fills --- */
+.phase-card.active .iso .iso-top {
+    fill: rgba(0, 212, 255, 0.2);
+}
+
+.phase-card.active .iso .iso-side {
+    fill: rgba(0, 212, 255, 0.12);
+}
+
+.phase-card.active .iso .iso-base {
+    fill: rgba(0, 212, 255, 0.06);
+}
+
+/* --- Completed Phase: Green fills --- */
+.phase-card.completed .iso .iso-top {
+    fill: var(--iso-top-success);
+}
+
+.phase-card.completed .iso .iso-side {
+    fill: var(--iso-side-success);
+}
+
+.phase-card.completed .iso .iso-base {
+    fill: var(--iso-base-success);
+}
+
+/* --- Locked Phase: Desaturated fills --- */
+.phase-card.locked .iso .iso-top {
+    fill: var(--iso-top-locked);
+}
+
+.phase-card.locked .iso .iso-side {
+    fill: var(--iso-side-locked);
+}
+
+.phase-card.locked .iso .iso-base {
+    fill: var(--iso-base-locked);
+}
+
+/* --- Met Criterion: Green fills --- */
+.criterion-status .iso.met .iso-top {
+    fill: var(--iso-top-success);
+}
+
+.criterion-status .iso.met .iso-side {
+    fill: var(--iso-side-success);
+}
+
+.criterion-status .iso.met .iso-base {
+    fill: var(--iso-base-success);
+}
+
+/* --- HD Badge: Amber fills --- */
+.slot-hd-badge .iso .iso-top {
+    fill: var(--iso-top-warning);
+}
+
+.slot-hd-badge .iso .iso-side {
+    fill: var(--iso-side-warning);
+}
+
+/* --- Hover: Subtle brightening --- */
+.phase-card:hover .iso .iso-top {
+    filter: brightness(1.3);
+}

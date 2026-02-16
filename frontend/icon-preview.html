@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VECTOR | Icon Style Preview</title>
+    <link rel="stylesheet" href="css/trajectory.css">
+    <link rel="stylesheet" href="css/icons/icons-kinetic.css">
+    <link rel="stylesheet" href="css/icons/icons-isometric.css">
+    <style>
+        /* ============= Preview Page Layout ============= */
+        .preview-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        .preview-header h1 {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .preview-header .subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Controls Bar */
+        .controls-bar {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .controls-bar button {
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+
+        .controls-bar button:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .controls-bar button.active-btn {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            background: var(--accent-primary-dim);
+        }
+
+        /* ============= Grid of 4 Styles ============= */
+        .style-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        @media (max-width: 768px) {
+            .style-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .style-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .style-panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .style-panel-header h2 {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .style-panel-header .style-tag {
+            font-size: 10px;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--border-default);
+        }
+
+        .style-panel.style-a .style-panel-header h2 {
+            color: #e0e0e0;
+        }
+
+        .style-panel.style-b .style-panel-header h2 {
+            color: #f0f0f0;
+        }
+
+        .style-panel.style-c .style-panel-header h2 {
+            color: var(--accent-primary);
+        }
+
+        .style-panel.style-d .style-panel-header h2 {
+            color: #b0d0ff;
+        }
+
+        /* Icon Grid inside each panel */
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            padding: 16px;
+        }
+
+        .icon-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 4px;
+            border-radius: var(--radius-sm);
+            transition: background 0.2s;
+        }
+
+        .icon-cell:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .icon-cell .icon-label {
+            font-size: 9px;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .icon-cell .icon-render {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            color: var(--text-secondary);
+        }
+
+        .icon-cell .icon-render .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .icon-cell .icon-render .icon.icon-lg {
+            width: 42px;
+            height: 42px;
+        }
+
+        .icon-cell .icon-render .icon.icon-sm {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ============= Size Comparison Row ============= */
+        .size-section {
+            margin-bottom: 48px;
+        }
+
+        .size-section h3 {
+            font-family: var(--font-display);
+            font-size: 14px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .size-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            padding: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+        }
+
+        .size-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+
+        .size-item .size-label {
+            font-size: 10px;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+        }
+
+        .size-item .icon-18 .icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .size-item .icon-24 .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .size-item .icon-48 .icon {
+            width: 48px;
+            height: 48px;
+        }
+
+        /* ============= Context Section ============= */
+        .context-section {
+            margin-bottom: 48px;
+        }
+
+        .context-section h3 {
+            font-family: var(--font-display);
+            font-size: 14px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .context-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .context-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .context-panel {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .context-panel-label {
+            font-size: 10px;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        /* Mock Phase Card in context */
+        .mock-phase {
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            margin: 12px;
+        }
+
+        .mock-phase.mock-completed {
+            background: var(--bg-card-completed);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .mock-phase.mock-active {
+            background: var(--bg-card-active);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .mock-phase.mock-locked {
+            opacity: 0.55;
+        }
+
+        .mock-phase-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+        }
+
+        .mock-phase-header .mock-icon {
+            flex-shrink: 0;
+            color: var(--text-muted);
+        }
+
+        .mock-phase.mock-active .mock-icon {
+            color: var(--accent-primary);
+        }
+
+        .mock-phase.mock-completed .mock-icon {
+            color: var(--accent-success);
+        }
+
+        .mock-phase.mock-locked .mock-icon {
+            color: var(--accent-locked);
+        }
+
+        .mock-phase-header .mock-title {
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .mock-phase-header .mock-badge {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        .mock-phase.mock-active .mock-badge {
+            background: var(--accent-primary-dim);
+            color: var(--accent-primary);
+        }
+
+        .mock-phase.mock-completed .mock-badge {
+            background: var(--accent-success-dim);
+            color: var(--accent-success);
+        }
+
+        .mock-phase.mock-locked .mock-badge {
+            background: rgba(75, 85, 99, 0.2);
+            color: var(--accent-locked);
+        }
+
+        .mock-criteria {
+            padding: 0 16px 14px;
+        }
+
+        .mock-crit-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .mock-crit-row .mock-crit-icon {
+            flex-shrink: 0;
+        }
+
+        .mock-crit-row .mock-crit-icon.color-met {
+            color: var(--accent-success);
+        }
+
+        .mock-crit-row .mock-crit-icon.color-pending {
+            color: var(--text-muted);
+        }
+
+        .mock-crit-row .mock-crit-icon.color-locked {
+            color: var(--accent-locked);
+        }
+
+        /* Light mode toggle */
+        body.light-mode {
+            background: #f0f2f5;
+        }
+
+        body.light-mode::before {
+            background-image:
+                linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+        }
+
+        body.light-mode .style-panel,
+        body.light-mode .size-row,
+        body.light-mode .context-panel,
+        body.light-mode .mock-phase {
+            background: #ffffff;
+            border-color: #e0e0e0;
+        }
+
+        body.light-mode .icon-cell .icon-render,
+        body.light-mode .mock-icon,
+        body.light-mode .size-item {
+            color: #333;
+        }
+
+        /* Footer */
+        .preview-footer {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            padding-top: 24px;
+            border-top: 1px solid var(--border-default);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Load all 4 icon sets -->
+    <script src="js/icons/icons-surgical.js"></script>
+    <script src="js/icons/icons-geometric.js"></script>
+    <script src="js/icons/icons-kinetic.js"></script>
+    <script src="js/icons/icons-isometric.js"></script>
+
+    <div class="preview-container">
+
+        <header class="global-nav">
+            <nav>
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="clinician.html" class="nav-link">Clinician Portal</a>
+                <a href="icon-preview.html" class="nav-link active" aria-current="page">Icon Preview</a>
+            </nav>
+        </header>
+
+        <!-- Header -->
+        <div class="preview-header">
+            <h1>VECTOR Icon Preview</h1>
+            <div class="subtitle">4 styles × 10 icons — side-by-side comparison</div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-bar">
+            <button id="toggleBg" class="active-btn">Dark Mode</button>
+            <button id="toggleSize">Toggle Size: 24px</button>
+        </div>
+
+        <!-- ===================== SECTION 1: Icon Grid ===================== -->
+        <div class="style-grid" id="styleGrid"></div>
+
+        <!-- ===================== SECTION 2: Size Comparison ===================== -->
+        <div class="size-section">
+            <h3>Size Comparison — "Target" Icon</h3>
+            <div class="size-row" id="sizeRow"></div>
+        </div>
+
+        <!-- ===================== SECTION 3: In Context ===================== -->
+        <div class="context-section">
+            <h3>In Context — Mock Phase Cards</h3>
+            <div class="context-grid" id="contextGrid"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="preview-footer">
+            Project VECTOR — Calgary Strength & Physio — Icon Design Preview — 2026-02-16
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // DATA
+        // =========================================================================
+
+        const STYLE_SETS = [
+            { key: 'SURGICAL', label: 'Surgical Mechanic', tag: 'Jing Zhang', icons: window.ICONS_SURGICAL, cssClass: 'style-a' },
+            { key: 'GEOMETRIC', label: 'Geometric Precision', tag: 'DKNG Studios', icons: window.ICONS_GEOMETRIC, cssClass: 'style-b' },
+            { key: 'KINETIC', label: 'Kinetic Rim-Lit', tag: 'Deakins', icons: window.ICONS_KINETIC, cssClass: 'style-c' },
+            { key: 'ISOMETRIC', label: 'Isometric Metaphor', tag: 'Andrew Nye', icons: window.ICONS_ISOMETRIC, cssClass: 'style-d' },
+        ];
+
+        const ICON_NAMES = [
+            'target', 'lock', 'unlock', 'active', 'check',
+            'pending', 'locked_crit', 'hd_badge', 'clinician', 'record'
+        ];
+
+        // =========================================================================
+        // RENDER: Icon Grid (4 panels)
+        // =========================================================================
+
+        function renderStyleGrid() {
+            const grid = document.getElementById('styleGrid');
+            grid.innerHTML = STYLE_SETS.map(style => `
+        <div class="style-panel ${style.cssClass}">
+          <div class="style-panel-header">
+            <h2>${style.label}</h2>
+            <span class="style-tag">${style.tag}</span>
+          </div>
+          <div class="icon-grid">
+            ${ICON_NAMES.map(name => `
+              <div class="icon-cell">
+                <div class="icon-render">${style.icons[name] || '<span style="color:#555">—</span>'}</div>
+                <div class="icon-label">${name.replace('_', ' ')}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+        }
+
+        // =========================================================================
+        // RENDER: Size Comparison
+        // =========================================================================
+
+        function renderSizeRow() {
+            const row = document.getElementById('sizeRow');
+            row.innerHTML = STYLE_SETS.map(style => {
+                const targetIcon = style.icons.target || '';
+                // Create versions at 3 sizes
+                const icon18 = targetIcon.replace('icon-lg', '');
+                const icon24 = targetIcon.replace('icon-lg', '');
+                const icon48 = targetIcon;
+                return `
+          <div class="size-item">
+            <div class="size-label">${style.key}</div>
+            <div class="icon-18" style="color:var(--text-secondary)">${icon18}</div>
+            <div class="icon-24" style="color:var(--text-secondary)">${icon24}</div>
+            <div class="icon-48" style="color:var(--text-secondary)">${icon48}</div>
+            <div class="size-label">18 / 24 / 48</div>
+          </div>
+        `;
+            }).join('');
+        }
+
+        // =========================================================================
+        // RENDER: Context Cards
+        // =========================================================================
+
+        function renderContextCards() {
+            const grid = document.getElementById('contextGrid');
+            grid.innerHTML = STYLE_SETS.map(style => {
+                const icons = style.icons;
+                return `
+          <div class="context-panel">
+            <div class="context-panel-label">${style.label}</div>
+            
+            <!-- Completed Phase -->
+            <div class="mock-phase mock-completed">
+              <div class="mock-phase-header">
+                <span class="mock-icon">${icons.check.replace('icon-sm met', 'icon')}</span>
+                <span class="mock-title">Phase 1: Protection</span>
+                <span class="mock-badge">Complete</span>
+              </div>
+            </div>
+
+            <!-- Active Phase -->
+            <div class="mock-phase mock-active">
+              <div class="mock-phase-header">
+                <span class="mock-icon">${icons.active}</span>
+                <span class="mock-title">Phase 2: Strengthening</span>
+                <span class="mock-badge">2/4</span>
+              </div>
+              <div class="mock-criteria">
+                <div class="mock-crit-row">
+                  <span class="mock-crit-icon color-met">${icons.check}</span>
+                  <span>Knee Extension = 0°</span>
+                </div>
+                <div class="mock-crit-row">
+                  <span class="mock-crit-icon color-met">${icons.check}</span>
+                  <span>Quad Lag = 0°</span>
+                </div>
+                <div class="mock-crit-row">
+                  <span class="mock-crit-icon color-pending">${icons.pending}</span>
+                  <span>Single Leg Squat — Acceptable</span>
+                </div>
+                <div class="mock-crit-row">
+                  <span class="mock-crit-icon color-pending">${icons.pending}</span>
+                  <span>LSI Quad Strength ≥ 80%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Locked Phase -->
+            <div class="mock-phase mock-locked">
+              <div class="mock-phase-header">
+                <span class="mock-icon">${icons.lock}</span>
+                <span class="mock-title">Phase 3: Return to Sport</span>
+                <span class="mock-badge">Locked</span>
+              </div>
+            </div>
+          </div>
+        `;
+            }).join('');
+        }
+
+        // =========================================================================
+        // CONTROLS
+        // =========================================================================
+
+        let isDark = true;
+        let currentSize = 24;
+
+        document.getElementById('toggleBg').addEventListener('click', function () {
+            isDark = !isDark;
+            document.body.classList.toggle('light-mode', !isDark);
+            this.textContent = isDark ? 'Dark Mode' : 'Light Mode';
+            this.classList.toggle('active-btn', isDark);
+        });
+
+        const sizes = [18, 24, 36, 48];
+        let sizeIdx = 1;
+
+        document.getElementById('toggleSize').addEventListener('click', function () {
+            sizeIdx = (sizeIdx + 1) % sizes.length;
+            currentSize = sizes[sizeIdx];
+            this.textContent = `Toggle Size: ${currentSize}px`;
+
+            // Update all icon renders in the grid
+            document.querySelectorAll('.icon-cell .icon-render .icon').forEach(icon => {
+                if (!icon.classList.contains('icon-lg') && !icon.classList.contains('icon-sm')) {
+                    icon.style.width = currentSize + 'px';
+                    icon.style.height = currentSize + 'px';
+                }
+            });
+        });
+
+        // =========================================================================
+        // INIT
+        // =========================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStyleGrid();
+            renderSizeRow();
+            renderContextCards();
+        });
+    </script>
+</body>
+
+</html>

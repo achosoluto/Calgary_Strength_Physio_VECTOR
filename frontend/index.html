@@ -1,16 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Project VECTOR — Sovereign Exercise Engine trajectory dashboard for rehabilitation progress tracking.">
+  <meta name="description"
+    content="Project VECTOR — Sovereign Exercise Engine trajectory dashboard for rehabilitation progress tracking.">
+
+  <!-- SECURITY: Content Security Policy — Block ALL external resources -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
+                 script-src 'self' 'unsafe-inline'; 
+                 style-src 'self' 'unsafe-inline'; 
+                 img-src 'self' data:; 
+                 font-src 'self'; 
+                 connect-src 'self'; 
+                 frame-src 'none'; 
+                 object-src 'none'; 
+                 base-uri 'self'; 
+                 form-action 'self';">
+
+  <!-- SECURITY: Disable DNS prefetching (prevents data leakage) -->
+  <meta http-equiv="x-dns-prefetch-control" content="off">
+
+  <!-- SECURITY: Disable preconnect -->
+  <link rel="dns-prefetch" href="none">
+
+  <!-- SECURITY: Referrer policy (no referrer sent to external sites) -->
+  <meta name="referrer" content="no-referrer">
+
   <title>VECTOR | Trajectory Dashboard</title>
   <link rel="stylesheet" href="css/trajectory.css">
+  <link rel="stylesheet" href="css/icons/icons-kinetic.css">
 </head>
+
 <body>
   <div class="app-container" id="app">
     <!-- Rendered by trajectory.js -->
   </div>
+  <div id="protocol-modal" class="modal-backdrop" hidden>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Protocol Source Viewer</h3>
+        <button class="modal-close" onclick="closeProtocolModal()" aria-label="Close protocol viewer">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="protocol-loading">Loading secure document...</div>
+        <div id="protocol-content" class="markdown-body"></div>
+      </div>
+      <div class="modal-footer">
+        <span class="secure-badge">🔒 OFF-LINE SECURE STORAGE</span>
+      </div>
+    </div>
+  </div>
+
   <script src="js/trajectory.js"></script>
 </body>
+
 </html>

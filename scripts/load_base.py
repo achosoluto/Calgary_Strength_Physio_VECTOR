@@ -28,6 +28,7 @@ def load_seed_data():
         sys.exit(1)
 
     conn = sqlite3.connect(DB_PATH)
+    conn.execute("PRAGMA foreign_keys = ON;")
     cursor = conn.cursor()
     
     try:

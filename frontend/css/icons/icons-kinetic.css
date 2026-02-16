@@ -1,0 +1,119 @@
+/* =============================================================================
+   VECTOR Icon Style C: "Kinetic Rim-Lit" — CSS Enhancements
+   Cinematic glow and pulse animations for the Deakins/Kamiński-inspired icon set.
+   ============================================================================= */
+
+/* --- Base Kinetic Glow --- */
+.kinetic {
+    transition: filter 0.3s ease;
+}
+
+/* --- Pike / Target: Always glowing --- */
+.pike-icon .kinetic {
+    filter: drop-shadow(0 0 6px var(--accent-primary)) drop-shadow(0 0 14px rgba(0, 212, 255, 0.25));
+    animation: rimBreath 3s ease-in-out infinite;
+}
+
+/* --- Phase Card States --- */
+
+/* Active Phase: Strong cyan rim pulse */
+.phase-card.active .phase-icon .kinetic {
+    filter: drop-shadow(0 0 5px var(--accent-primary)) drop-shadow(0 0 12px rgba(0, 212, 255, 0.3));
+    animation: rimPulse 2s ease-in-out infinite;
+}
+
+/* Completed Phase: Steady green glow */
+.phase-card.completed .phase-icon .kinetic {
+    filter: drop-shadow(0 0 4px var(--accent-success)) drop-shadow(0 0 10px rgba(16, 185, 129, 0.25));
+}
+
+/* Locked Phase: No emission — matte, dead */
+.phase-card.locked .phase-icon .kinetic {
+    filter: none;
+    opacity: 0.25;
+}
+
+/* --- Criterion States --- */
+
+/* Met criterion: Green glow pop */
+.criterion-status .kinetic.met {
+    filter: drop-shadow(0 0 3px var(--accent-success)) drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));
+    opacity: 1;
+}
+
+/* Pending criterion: Subtle warm glow */
+.criterion-status .kinetic:not(.met):not(.locked) {
+    filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.3));
+    opacity: 0.7;
+}
+
+/* Locked criterion: No glow */
+.criterion-status .kinetic.locked {
+    filter: none;
+    opacity: 0.2;
+}
+
+/* --- HD Badge: Electric amber glow --- */
+.slot-hd-badge .kinetic {
+    filter: drop-shadow(0 0 3px var(--accent-warning)) drop-shadow(0 0 6px rgba(245, 158, 11, 0.25));
+}
+
+/* --- Animations --- */
+
+/* Slow breath for the Pike — ambient atmosphere */
+@keyframes rimBreath {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 4px var(--accent-primary)) drop-shadow(0 0 10px rgba(0, 212, 255, 0.2));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 8px var(--accent-primary)) drop-shadow(0 0 18px rgba(0, 212, 255, 0.35));
+    }
+}
+
+/* Pulse for active phase — alive, in-motion */
+@keyframes rimPulse {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 3px var(--accent-primary)) drop-shadow(0 0 8px rgba(0, 212, 255, 0.2));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 7px var(--accent-primary)) drop-shadow(0 0 16px rgba(0, 212, 255, 0.4));
+    }
+}
+
+/* Flash for newly-met criteria */
+@keyframes rimFlash {
+    0% {
+        filter: drop-shadow(0 0 0px var(--accent-success));
+        transform: scale(1);
+    }
+
+    50% {
+        filter: drop-shadow(0 0 12px var(--accent-success)) drop-shadow(0 0 24px rgba(16, 185, 129, 0.5));
+        transform: scale(1.15);
+    }
+
+    100% {
+        filter: drop-shadow(0 0 4px var(--accent-success));
+        transform: scale(1);
+    }
+}
+
+.criterion-status.just-met .kinetic {
+    animation: rimFlash 0.6s ease-out;
+}
+
+/* --- Hover Enhancement --- */
+.phase-card:hover .kinetic {
+    filter: drop-shadow(0 0 4px currentColor);
+}
+
+.phase-card.locked:hover .kinetic {
+    filter: none;
+    opacity: 0.35;
+}

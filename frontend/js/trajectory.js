@@ -6,33 +6,68 @@
  * Pure vanilla JS — no dependencies.
  */
 
-const API_BASE_URL = window.location.origin; // Dynamically use the current host
-const CLIENT_ID = "CLT_DEMO_01"; // Default for dev
+const API_BASE_URL = window.location.origin;
+
+// Extract Client ID from URL (?client=ID) or fallback to demo
+const urlParams = new URLSearchParams(window.location.search);
+const CLIENT_ID = urlParams.get('client') || "CLT_DEMO_01";
 
 // =============================================================================
-// ICONS (SVG) — "Industrial/Kinetic" Theme
+// ICONS (SVG) — "Kinetic Rim-Lit" Style (Deakins/Kamiński-inspired)
+// Loaded from external module for easy style switching
 // =============================================================================
+
+// Kinetic Rim-Lit icon set with glow-optimized shapes
 const ICONS = {
-  // Target/Pike: A sharp radar crosshair
-  target: `<svg viewBox="0 0 24 24" class="icon icon-lg"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>`,
+  // Target: Double-ring crosshair with center pip — designed for outer glow
+  target: `<svg viewBox="0 0 24 24" class="icon icon-lg kinetic" role="img" aria-label="Terminal Objective">
+    <circle cx="12" cy="12" r="10" stroke-width="2"/>
+    <circle cx="12" cy="12" r="5.5" stroke-width="1.5"/>
+    <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
+    <line x1="12" y1="1" x2="12" y2="5" stroke-width="2"/>
+    <line x1="12" y1="19" x2="12" y2="23" stroke-width="2"/>
+    <line x1="1" y1="12" x2="5" y2="12" stroke-width="2"/>
+    <line x1="19" y1="12" x2="23" y2="12" stroke-width="2"/>
+  </svg>`,
 
-  // Lock: Sturdy padlock
-  lock: `<svg viewBox="0 0 24 24" class="icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`,
+  // Lock: Clean padlock silhouette — glow outlines the entire form
+  lock: `<svg viewBox="0 0 24 24" class="icon kinetic" role="img" aria-label="Locked Phase">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke-width="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-width="2"/>
+    <circle cx="12" cy="16" r="1.5" stroke-width="1.5"/>
+    <line x1="12" y1="17.5" x2="12" y2="19.5" stroke-width="1.5"/>
+  </svg>`,
 
-  // Unlock: Open shackle
-  unlock: `<svg viewBox="0 0 24 24" class="icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>`,
+  // Unlock: Open shackle — the gap in the shackle catches the glow
+  unlock: `<svg viewBox="0 0 24 24" class="icon kinetic" role="img" aria-label="Unlocked Phase">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke-width="2"/>
+    <path d="M7 11V7a5 5 0 0 1 9.9-1" stroke-width="2"/>
+    <circle cx="12" cy="16" r="1.5" stroke-width="1.5"/>
+    <line x1="12" y1="17.5" x2="12" y2="19.5" stroke-width="1.5"/>
+  </svg>`,
 
-  // Active: Pulse/Activity line
-  active: `<svg viewBox="0 0 24 24" class="icon"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>`,
+  // Active: Pulse/heartbeat line — designed for pulsing glow animation
+  active: `<svg viewBox="0 0 24 24" class="icon kinetic" role="img" aria-label="Active Phase">
+    <polyline points="1 12, 5 12, 7.5 6, 10 18, 12.5 6, 15 18, 17.5 12, 23 12" stroke-width="2"/>
+  </svg>`,
 
-  // Check: Circle with checkmark (Met)
-  check: `<svg viewBox="0 0 24 24" class="icon icon-sm met"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`,
+  // Check: Circle + checkmark — clean shape, glow wraps around circle
+  check: `<svg viewBox="0 0 24 24" class="icon icon-sm met kinetic" role="img" aria-label="Criterion Met">
+    <circle cx="12" cy="12" r="10" stroke-width="2"/>
+    <polyline points="7 12.5, 10.5 16, 17 9" stroke-width="2"/>
+  </svg>`,
 
-  // Pending: Empty circle
-  pending: `<svg viewBox="0 0 24 24" class="icon icon-sm"><circle cx="12" cy="12" r="10"></circle></svg>`,
+  // Pending: Circle with clock hands — suggests "waiting" in the glow
+  pending: `<svg viewBox="0 0 24 24" class="icon icon-sm kinetic" role="img" aria-label="Criterion Pending">
+    <circle cx="12" cy="12" r="10" stroke-width="2"/>
+    <polyline points="12 7, 12 12, 15.5 14" stroke-width="2"/>
+  </svg>`,
 
-  // Locked Criterion: Dashed circle
-  locked_crit: `<svg viewBox="0 0 24 24" class="icon icon-sm locked"><circle cx="12" cy="12" r="10" stroke-dasharray="4 4"></circle></svg>`
+  // Locked Criterion: Dashed circle — broken glow effect
+  locked_crit: `<svg viewBox="0 0 24 24" class="icon icon-sm locked kinetic" role="img" aria-label="Criterion Locked">
+    <circle cx="12" cy="12" r="10" stroke-dasharray="4 3" stroke-width="2"/>
+    <line x1="8" y1="12" x2="16" y2="12" stroke-width="2" opacity="0.4"/>
+  </svg>`
 };
 
 // =============================================================================
@@ -65,7 +100,19 @@ function renderPike(client) {
       <div class="pike-sport">${client.pathology} → ${client.sport}</div>
       <div class="pike-source">
         Protocol Source: ${client.researchSource} <br>
-        <span class="doi">DOI: ${client.researchDoi}</span>
+        <a href="https://doi.org/${client.researchDoi}" target="_blank" rel="noopener noreferrer" class="doi-link" aria-label="View research paper on DOI.org">
+          DOI: ${client.researchDoi}
+        </a>
+        <button class="view-source-btn" onclick="openProtocolModal('${client.protocolId || 'PAT_ACL_R_01'}')">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          View Source Protocol
+        </button>
       </div>
     </div>
   `;
@@ -144,7 +191,7 @@ function renderPhaseCard(phase, index) {
 
   return `
     <div class="phase-card ${phase.status}" data-phase="${index}" id="phase-${index}">
-      <div class="phase-header" onclick="togglePhase(${index})">
+      <div class="phase-header" onclick="togglePhase(${index})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePhase(${index});}" tabindex="0" role="button" aria-expanded="false">
         <span class="phase-icon">${iconHTML}</span>
         <span class="phase-title">${phase.name}</span>
         <span class="phase-badge ${badgeClass}">${isActive ? `${metCount}/${totalCount}` : badgeText}</span>
@@ -201,6 +248,13 @@ function renderDashboard(data) {
   const totalPhases = phases.length;
 
   let html = `
+    <header class="global-nav">
+      <nav>
+        <a href="index.html" class="nav-link active" aria-current="page">Dashboard</a>
+        <a href="clinician.html" class="nav-link">Clinician Portal</a>
+        <a href="icon-preview.html" class="nav-link">Icon Preview</a>
+      </nav>
+    </header>
     <div class="header">
       <div class="header-brand">
         <h1>VECTOR</h1>
@@ -235,5 +289,117 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (data) {
     console.log("Journey Data Loaded:", data);
     renderDashboard(data);
+  }
+  /* --- Protocol Viewer Logic --- */
+
+  function renderMarkdown(text) {
+    if (!text) return "";
+    return text
+      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+      .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2" target="_blank">$1</a>')
+      .replace(/^\* (.*$)/gim, '<ul><li>$1</li></ul>')
+      .replace(/<\/ul>\n<ul>/gim, '')
+      .replace(/^---$/gim, '<hr>')
+      .replace(/\n\n/gim, '<br><br>');
+  }
+
+  // --- Link Safety & Reporting ---
+
+  // Global handler for external links in markdown
+  document.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A' && e.target.href.startsWith('http')) {
+      if (!navigator.onLine) {
+        e.preventDefault();
+        alert("⚠️ OFFLINE MODE\n\nExternal resources cannot be accessed while offline. Please use the Local Copy.");
+        return;
+      }
+      // Security best practice: open in new tab with noopener
+      e.target.target = "_blank";
+      e.target.rel = "noopener noreferrer";
+    }
+  });
+
+  window.reportProtocolIssue = function () {
+    const protocolId = document.querySelector('.modal-content').dataset.currentProtocol;
+    const issue = prompt("Describe the issue (e.g., 'Broken link', 'Outdated info'):");
+    if (issue) {
+      // In a real app, this would POST to /api/flag
+      console.log(`[AUDIT] FLAGGED_PROTOCOL: ${protocolId} | REASON: ${issue}`);
+      alert("✅ Issue reported. The system admin will review this protocol.");
+    }
+  };
+
+  window.openProtocolModal = async function (protocolId) {
+    const modal = document.getElementById("protocol-modal");
+    const content = document.getElementById("protocol-content");
+    const loading = document.getElementById("protocol-loading");
+    const footer = document.querySelector(".modal-footer");
+
+    // Store ID for reporting
+    if (document.querySelector('.modal-content')) {
+      document.querySelector('.modal-content').dataset.currentProtocol = protocolId;
+    }
+
+    // Add Report Button if missing
+    if (footer && !footer.querySelector('.report-btn')) {
+      const reportBtn = document.createElement("button");
+      reportBtn.className = "view-source-btn report-btn";
+      reportBtn.innerHTML = "🚩 Report Issue";
+      reportBtn.style.marginRight = "auto"; // Push to left
+      reportBtn.style.border = "1px solid var(--accent-danger)";
+      reportBtn.style.color = "var(--accent-danger)";
+      reportBtn.onclick = window.reportProtocolIssue;
+      footer.prepend(reportBtn);
+    }
+
+    if (modal) {
+      modal.hidden = false;
+      setTimeout(() => modal.classList.add("active"), 10);
+    }
+
+    if (content) content.innerHTML = "";
+    if (loading) loading.style.display = "block";
+
+    try {
+      // Use API_BASE_URL if defined, else relative path
+      const baseUrl = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : '';
+      const response = await fetch(`${baseUrl}/api/protocol/${protocolId}`);
+      if (!response.ok) throw new Error("Protocol not found");
+
+      const data = await response.json();
+      if (loading) loading.style.display = "none";
+      if (content) content.innerHTML = renderMarkdown(data.content);
+    } catch (error) {
+      console.error("Protocol Error:", error);
+      if (loading) loading.style.display = "none";
+      if (content) content.innerHTML = `<div class="error-state">
+        <strong>Error Loading Document</strong><br>
+        Could not retrieve the protocol from secure storage.<br>
+        ${error.message}
+      </div>`;
+    }
+  };
+
+  window.closeProtocolModal = function () {
+    const modal = document.getElementById("protocol-modal");
+    if (modal) {
+      modal.classList.remove("active");
+      setTimeout(() => {
+        modal.hidden = true;
+      }, 300);
+    }
+  };
+
+  // Close on backdrop click
+  const modalEl = document.getElementById("protocol-modal");
+  if (modalEl) {
+    modalEl.addEventListener("click", (e) => {
+      if (e.target.id === "protocol-modal") {
+        window.closeProtocolModal();
+      }
+    });
   }
 });

@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS pathologies (
     updated_by        TEXT DEFAULT 'system'       -- Clinician who last updated
 );
 
-CREATE INDEX idx_pathologies_osics ON pathologies(osics_code);
-CREATE INDEX idx_pathologies_active ON pathologies(is_active);
+CREATE INDEX IF NOT EXISTS idx_pathologies_osics ON pathologies(osics_code);
+CREATE INDEX IF NOT EXISTS idx_pathologies_active ON pathologies(is_active);
 
 -- ---------------------------------------------------------------------------
 -- 1b. Phases — The "Vector" (Progression State)
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS phases (
     UNIQUE(pathology_id, order_index)
 );
 
-CREATE INDEX idx_phases_pathology ON phases(pathology_id);
+CREATE INDEX IF NOT EXISTS idx_phases_pathology ON phases(pathology_id);
 
 -- ---------------------------------------------------------------------------
 -- 1c. Exit Criteria — The "Gate" (Normalized from phases.exit_criteria)
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS exit_criteria (
     FOREIGN KEY(phase_id) REFERENCES phases(id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_exit_criteria_phase ON exit_criteria(phase_id);
+CREATE INDEX IF NOT EXISTS idx_exit_criteria_phase ON exit_criteria(phase_id);
 
 -- ---------------------------------------------------------------------------
 -- 1d. Programming Slots — The "Syntax" (Exercise Logic)
@@ -124,8 +124,8 @@ CREATE TABLE IF NOT EXISTS programming_slots (
     UNIQUE(phase_id, order_index)
 );
 
-CREATE INDEX idx_slots_phase ON programming_slots(phase_id);
-CREATE INDEX idx_slots_type ON programming_slots(slot_type);
+CREATE INDEX IF NOT EXISTS idx_slots_phase ON programming_slots(phase_id);
+CREATE INDEX IF NOT EXISTS idx_slots_type ON programming_slots(slot_type);
 
 
 -- =============================================================================
@@ -169,8 +169,8 @@ CREATE TABLE IF NOT EXISTS client_journeys (
     FOREIGN KEY(current_phase_id) REFERENCES phases(id)
 );
 
-CREATE INDEX idx_journeys_client ON client_journeys(client_id);
-CREATE INDEX idx_journeys_status ON client_journeys(status);
+CREATE INDEX IF NOT EXISTS idx_journeys_client ON client_journeys(client_id);
+CREATE INDEX IF NOT EXISTS idx_journeys_status ON client_journeys(status);
 
 -- ---------------------------------------------------------------------------
 -- 2c. Phase Completions — Audit Log of Phase Transitions
@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS phase_completions (
     FOREIGN KEY(phase_id) REFERENCES phases(id)
 );
 
-CREATE INDEX idx_completions_journey ON phase_completions(journey_id);
+CREATE INDEX IF NOT EXISTS idx_completions_journey ON phase_completions(journey_id);
 
 -- ---------------------------------------------------------------------------
 -- 2d. Metric Recordings — Individual Measurement Entries
@@ -217,8 +217,8 @@ CREATE TABLE IF NOT EXISTS metric_recordings (
     FOREIGN KEY(criterion_id) REFERENCES exit_criteria(id)
 );
 
-CREATE INDEX idx_metrics_journey ON metric_recordings(journey_id);
-CREATE INDEX idx_metrics_criterion ON metric_recordings(criterion_id);
+CREATE INDEX IF NOT EXISTS idx_metrics_journey ON metric_recordings(journey_id);
+CREATE INDEX IF NOT EXISTS idx_metrics_criterion ON metric_recordings(criterion_id);
 
 
 -- =============================================================================

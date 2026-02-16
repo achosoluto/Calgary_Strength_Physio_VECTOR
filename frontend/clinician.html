@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VECTOR | Clinician Portal</title>
+    <link rel="stylesheet" href="css/trajectory.css">
+    <style>
+        .portal-form {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border: 1px solid var(--border-muted);
+            border-radius: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1a1a1a;
+            border: 1px solid var(--border-muted);
+            color: var(--text-base);
+            border-radius: 2px;
+        }
+
+        button {
+            background: var(--accent-active);
+            color: black;
+            border: none;
+            padding: 1rem 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .criteria-row {
+            display: grid;
+            grid-template-columns: 1fr 100px;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .status-msg {
+            margin-top: 1rem;
+            padding: 1rem;
+            display: none;
+            border-radius: 4px;
+        }
+
+        .success {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
+        .error {
+            background: rgba(255, 85, 85, 0.1);
+            color: #ff5555;
+            border: 1px solid #ff5555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="global-nav">
+            <nav>
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="clinician.html" class="nav-link active" aria-current="page">Clinician Portal</a>
+                <a href="icon-preview.html" class="nav-link">Icon Preview</a>
+            </nav>
+        </header>
+
+        <div class="header">
+            <div class="header-brand">
+                <h1>VECTOR</h1>
+                <div class="subtitle">Clinician Portal</div>
+            </div>
+        </div>
+
+        <div class="portal-form">
+            <div class="form-group">
+                <label for="clientId">Client ID</label>
+                <input type="text" id="clientId" value="CLT_DEMO_01">
+            </div>
+            <button id="loadCriteria">Load Current Phase Criteria</button>
+
+            <div id="criteriaForm" style="margin-top: 2rem; display: none;">
+                <div id="criteriaList"></div>
+                <button id="submitMetrics">Record All Metrics</button>
+            </div>
+
+            <div id="status" class="status-msg"></div>
+        </div>
+
+    </div>
+
+    <script src="js/clinician.js"></script>
+</body>
+
+</html>
