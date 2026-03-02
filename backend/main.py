@@ -94,169 +94,192 @@ def check_criteria_met(operator, target_val, current_val):
 
 @app.get("/api/client/{client_id}/journey")
 def get_client_journey(client_id: str):
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
-    # 1. Fetch Active Journey Details
-    journey = cursor.execute("""
-        SELECT 
-            j.id as journey_id, j.current_phase_id, j.started_at,
-            c.display_name, c.sport_activity, c.terminal_goal,
-            p.id as pathology_id, p.name as pathology_name
-        FROM client_journeys j
-        JOIN clients c ON j.client_id = c.id
-        JOIN pathologies p ON j.pathology_id = p.id
-        WHERE c.id = ? AND j.status = 'active'
-    """, (client_id,)).fetchone()
+        # 1. Fetch Active Journey Details
+        journey = cursor.execute("""
+            SELECT
+                j.id as journey_id, j.current_phase_id, j.started_at,
+                c.display_name, c.sport_activity, c.terminal_goal,
+                p.id as pathology_id, p.name as pathology_name
+            FROM client_journeys j
+            JOIN clients c ON j.client_id = c.id
+            JOIN pathologies p ON j.pathology_id = p.id
+            WHERE c.id = ? AND j.status = 'active'
+        """, (client_id,)).fetchone()
 
-    if not journey:
-        conn.close()
-        raise HTTPException(status_code=404, detail="Active journey not found")
+        if not journey:
+            raise HTTPException(status_code=404, detail="Active journey not found")
 
-    # 2. Fetch All Phases for this Pathology
-    phases_rows = cursor.execute("""
-        SELECT * FROM phases WHERE pathology_id = ? ORDER BY order_index ASC
-    """, (journey["pathology_id"],)).fetchall()
+        # 2. Fetch All Phases for this Pathology
+        phases_rows = cursor.execute("""
+            SELECT * FROM phases WHERE pathology_id = ? ORDER BY order_index ASC
+        """, (journey["pathology_id"],)).fetchall()
 
-    phases_data = []
-    current_phase_index = -1
+        phases_data = []
+        current_phase_index = -1
 
-    for idx, ph in enumerate(phases_rows):
-        phase_id = ph["id"]
-        
-        # Determine Status
-        if ph["id"] == journey["current_phase_id"]:
-            status = "active"
-            current_phase_index = idx
-        elif current_phase_index == -1: 
-            status = "completed"
-        else:
-            status = "locked"
+        for idx, ph in enumerate(phases_rows):
+            phase_id = ph["id"]
 
-        # Fetch Exit Criteria
-        criteria_rows = cursor.execute("""
-            SELECT * FROM exit_criteria WHERE phase_id = ?
-        """, (phase_id,)).fetchall()
+            # Determine Status
+            if ph["id"] == journey["current_phase_id"]:
+                status = "active"
+                current_phase_index = idx
+            elif current_phase_index == -1:
+                status = "completed"
+            else:
+                status = "locked"
 
-        criteria_list = []
-        for crit in criteria_rows:
-            # Fetch latest metric
-            rec = cursor.execute("""
-                SELECT recorded_value 
-                FROM metric_recordings 
-                WHERE journey_id = ? AND criterion_id = ? 
-                ORDER BY recorded_at DESC LIMIT 1
-            """, (journey["journey_id"], crit["id"])).fetchone()
-            
-            current_val = rec["recorded_value"] if rec else None
-            is_met = check_criteria_met(
-                crit["target_operator"], 
-                crit["target_value"], 
-                current_val
-            )
+            # Fetch Exit Criteria
+            criteria_rows = cursor.execute("""
+                SELECT * FROM exit_criteria WHERE phase_id = ?
+            """, (phase_id,)).fetchall()
 
-            criteria_list.append({
-                "label": f"{crit['metric_name']} {crit['target_operator']} {crit['target_value']} {crit['measurement_unit']}",
-                "target": f"{crit['target_operator']} {crit['target_value']}",
-                "current": f"{current_val} {crit['measurement_unit']}" if current_val else None,
-                "met": is_met
+            criteria_list = []
+            for crit in criteria_rows:
+                # Fetch latest metric
+                rec = cursor.execute("""
+                    SELECT recorded_value
+                    FROM metric_recordings
+                    WHERE journey_id = ? AND criterion_id = ?
+                    ORDER BY recorded_at DESC LIMIT 1
+                """, (journey["journey_id"], crit["id"])).fetchone()
+
+                current_val = rec["recorded_value"] if rec else None
+                is_met = check_criteria_met(
+                    crit["target_operator"],
+                    crit["target_value"],
+                    current_val
+                )
+
+                criteria_list.append({
+                    "label": f"{crit['metric_name']} {crit['target_operator']} {crit['target_value']} {crit['measurement_unit']}",
+                    "target": f"{crit['target_operator']} {crit['target_value']}",
+                    "current": f"{current_val} {crit['measurement_unit']}" if current_val else None,
+                    "met": is_met
+                })
+
+            # Fetch Programming
+            prog_rows = cursor.execute("""
+                SELECT * FROM programming_slots WHERE phase_id = ? ORDER BY order_index ASC
+            """, (phase_id,)).fetchall()
+
+            prog_list = []
+            for prog in prog_rows:
+                prog_list.append({
+                    "type": prog["slot_type"],
+                    "exercise": prog["standard_exercise"],
+                    "hd": prog["high_density_option"],
+                    "rationale": prog["high_density_rationale"],
+                    "intent": prog["intent_description"],
+                    "detail": prog["sets_reps_guidance"] or "See clinician notes"
+                })
+
+            phases_data.append({
+                "name": ph["name"],
+                "status": status,
+                "description": ph["description"],
+                "typicalDuration": ph["typical_duration"],
+                "criteria": criteria_list,
+                "programming": prog_list
             })
 
-        # Fetch Programming
-        prog_rows = cursor.execute("""
-            SELECT * FROM programming_slots WHERE phase_id = ? ORDER BY order_index ASC
-        """, (phase_id,)).fetchall()
-        
-        prog_list = []
-        for prog in prog_rows:
-            prog_list.append({
-                "type": prog["slot_type"],
-                "exercise": prog["standard_exercise"],
-                "hd": prog["high_density_option"],
-                "rationale": prog["high_density_rationale"], 
-                "intent": prog["intent_description"],
-                "detail": prog["sets_reps_guidance"] or "See clinician notes"
-            })
+        # Get extra pathology details
+        pathology_details = cursor.execute("SELECT research_source, research_doi FROM pathologies WHERE id = ?", (journey["pathology_id"],)).fetchone()
 
-        phases_data.append({
-            "name": ph["name"],
-            "status": status,
-            "description": ph["description"],
-            "typicalDuration": ph["typical_duration"],
-            "criteria": criteria_list,
-            "programming": prog_list
-        })
-        
-    # Get extra pathology details
-    pathology_details = cursor.execute("SELECT research_source, research_doi FROM pathologies WHERE id = ?", (journey["pathology_id"],)).fetchone()
-    
-    conn.close()
+        if not pathology_details:
+            raise HTTPException(status_code=500, detail="Protocol data missing for this pathology")
 
-    return {
-        "client": {
-            "name": journey["display_name"],
-            "sport": journey["sport_activity"],
-            "terminalGoal": journey["terminal_goal"],
-            "pathology": journey["pathology_name"],
-            "protocolId": journey["pathology_id"],
-            "researchSource": pathology_details["research_source"],
-            "researchDoi": pathology_details["research_doi"],
-            "startDate": journey["started_at"],
-            "nextSession": "2026-02-14", 
-            "currentPhaseIndex": current_phase_index
-        },
-        "phases": phases_data
-    }
+        return {
+            "client": {
+                "name": journey["display_name"],
+                "sport": journey["sport_activity"],
+                "terminalGoal": journey["terminal_goal"],
+                "pathology": journey["pathology_name"],
+                "protocolId": journey["pathology_id"],
+                "researchSource": pathology_details["research_source"],
+                "researchDoi": pathology_details["research_doi"],
+                "startDate": journey["started_at"],
+                "nextSession": "2026-02-14",
+                "currentPhaseIndex": current_phase_index
+            },
+            "phases": phases_data
+        }
+
+    except HTTPException:
+        raise
+    except sqlite3.OperationalError as e:
+        audit_logger.error(f"JOURNEY DB ERROR: {client_id} | {str(e)}")
+        raise HTTPException(status_code=503, detail="Database not initialised — run: python3 scripts/deploy_init.py")
+    except Exception as e:
+        audit_logger.error(f"JOURNEY ERROR: {client_id} | {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to load journey data")
+    finally:
+        if conn:
+            conn.close()
 
 @app.post("/api/metric/record")
 def record_metric(record: MetricRecord):
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
-    # 1. Get active journey
-    journey = cursor.execute("""
-        SELECT id, current_phase_id FROM client_journeys 
-        WHERE client_id = ? AND status = 'active'
-    """, (record.client_id,)).fetchone()
+        # 1. Get active journey
+        journey = cursor.execute("""
+            SELECT id, current_phase_id FROM client_journeys
+            WHERE client_id = ? AND status = 'active'
+        """, (record.client_id,)).fetchone()
 
-    if not journey:
-        conn.close()
-        raise HTTPException(status_code=404, detail="No active journey found for this client")
+        if not journey:
+            raise HTTPException(status_code=404, detail="No active journey found for this client")
 
-    # 2. Find matching criterion in current phase
-    # We match by metric_name
-    criterion = cursor.execute("""
-        SELECT id FROM exit_criteria 
-        WHERE phase_id = ? AND metric_name = ?
-    """, (journey["current_phase_id"], record.metric_name)).fetchone()
+        # 2. Find matching criterion in current phase
+        criterion = cursor.execute("""
+            SELECT id FROM exit_criteria
+            WHERE phase_id = ? AND metric_name = ?
+        """, (journey["current_phase_id"], record.metric_name)).fetchone()
 
-    if not criterion:
-        conn.close()
-        raise HTTPException(status_code=400, detail=f"Metric '{record.metric_name}' is not an exit criterion for current phase")
+        if not criterion:
+            raise HTTPException(status_code=400, detail=f"Metric '{record.metric_name}' is not an exit criterion for current phase")
 
-    # 3. Insert recording
-    recorded_at = record.recorded_at or datetime.now().isoformat()
-    recording_id = f"REC_{datetime.now().timestamp()}"
-    
-    cursor.execute("""
-        INSERT INTO metric_recordings 
-        (id, journey_id, phase_id, criterion_id, metric_name, recorded_value, measurement_unit, recorded_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        recording_id, 
-        journey["id"], 
-        journey["current_phase_id"], 
-        criterion["id"], 
-        record.metric_name, 
-        record.value, 
-        record.unit, 
-        recorded_at
-    ))
+        # 3. Insert recording
+        recorded_at = record.recorded_at or datetime.now().isoformat()
+        recording_id = f"REC_{datetime.now().timestamp()}"
 
-    conn.commit()
-    conn.close()
+        cursor.execute("""
+            INSERT INTO metric_recordings
+            (id, journey_id, phase_id, criterion_id, metric_name, recorded_value, measurement_unit, recorded_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            recording_id,
+            journey["id"],
+            journey["current_phase_id"],
+            criterion["id"],
+            record.metric_name,
+            record.value,
+            record.unit,
+            recorded_at
+        ))
 
-    return {"status": "success", "recording_id": recording_id}
+        conn.commit()
+        return {"status": "success", "recording_id": recording_id}
+
+    except HTTPException:
+        raise
+    except sqlite3.OperationalError as e:
+        audit_logger.error(f"METRIC DB ERROR: {record.client_id} | {str(e)}")
+        raise HTTPException(status_code=503, detail="Database not initialised — run: python3 scripts/deploy_init.py")
+    except Exception as e:
+        audit_logger.error(f"METRIC ERROR: {record.client_id} | {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to record metric")
+    finally:
+        if conn:
+            conn.close()
 
 @app.get("/api/protocol/{protocol_id}")
 async def get_protocol_content(protocol_id: str):
